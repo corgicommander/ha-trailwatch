@@ -1,3 +1,5 @@
+<img src="images/icon.png" alt="" width="96" align="right">
+
 # Trailwatch
 
 A Home Assistant integration for **Tactacam Reveal** cellular trail cameras. It keeps
