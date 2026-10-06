@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- Ship the Trailwatch icon with the integration (`brand/`), shown by Home Assistant
+  2026.9+ on the integration and device pages.
+
 ## 1.0.0 (first public release)
 
 - Archive, classification (local SpeciesNet server and/or AI Task, stronger AI second

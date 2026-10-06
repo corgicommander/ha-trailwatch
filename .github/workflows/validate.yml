@@ -22,5 +22,3 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          # The brand icon is pending in home-assistant/brands.
-          ignore: brands
