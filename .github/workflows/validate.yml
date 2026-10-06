@@ -22,5 +22,5 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          # Brand icon and topics are added before submitting to the default store.
-          ignore: brands topics
+          # The brand icon is pending in home-assistant/brands.
+          ignore: brands
