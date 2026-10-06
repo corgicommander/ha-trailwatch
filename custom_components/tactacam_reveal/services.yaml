@@ -1,0 +1,62 @@
+sort_media:
+  fields:
+    media_content_id:
+      required: true
+      example: media-source://media_source/local/tactacam_reveal/Back_Field/photo.jpg
+      selector:
+        text:
+    category:
+      required: true
+      example: dog-human
+      selector:
+        text:
+classify_media:
+  fields:
+    media_content_id:
+      required: true
+      example: media-source://tactacam_reveal/Back_Field/photo.jpg
+      selector:
+        text:
+    sort:
+      default: true
+      selector:
+        boolean:
+    fire_event:
+      default: false
+      selector:
+        boolean:
+classify_archive:
+  fields:
+    camera:
+      example: Back_Field
+      selector:
+        text:
+    since:
+      selector:
+        date:
+    until:
+      selector:
+        date:
+    include_sorted:
+      default: false
+      selector:
+        boolean:
+relabel:
+  fields:
+    media_content_id:
+      required: true
+      example: media-source://tactacam_reveal/Back_Field/uncertain/photo.jpg
+      selector:
+        text:
+    category:
+      required: true
+      example: deer
+      selector:
+        text:
+set_reference:
+  fields:
+    media_content_id:
+      required: true
+      example: media-source://tactacam_reveal/Back_Field/falsepositives/photo.jpg
+      selector:
+        text:

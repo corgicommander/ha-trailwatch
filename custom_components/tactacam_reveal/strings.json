@@ -1,0 +1,228 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect Tactacam Reveal",
+        "description": "Sign in with the account used by the Reveal web portal.",
+        "data": {
+          "username": "Email",
+          "password": "Password",
+          "scan_interval": "Check interval (minutes)",
+          "download_photos": "Download photos",
+          "download_videos": "Download videos",
+          "persistent_notifications": "Create persistent notifications"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to Reveal",
+      "invalid_auth": "Reveal rejected the email or password"
+    },
+    "abort": {
+      "already_configured": "This Reveal account is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Tactacam Reveal settings",
+        "menu_options": {
+          "downloads": "Downloads & storage",
+          "classification": "Classification (local model and AI)",
+          "notifications": "Phone notifications",
+          "cameras": "Per-camera settings"
+        }
+      },
+      "downloads": {
+        "title": "Downloads & storage",
+        "data": {
+          "scan_interval": "Check interval (minutes)",
+          "download_photos": "Download photos",
+          "download_videos": "Download requested videos",
+          "persistent_notifications": "Create a Home Assistant notification for every new photo",
+          "false_positive_retention_days": "Delete empty photos after",
+          "auto_request_videos": "Automatically request videos"
+        },
+        "data_description": {
+          "false_positive_retention_days": "Photos classified as empty (false positives) older than this are deleted daily. 0 keeps them forever.",
+          "download_videos": "Reveal only uploads a video when it is requested (in the Reveal app or automatically below). Requested videos are archived next to their photo and classified.",
+          "auto_request_videos": "Ask Reveal for the video behind new photos. Turning this on opens a page to choose which animals trigger a request. Each video upload costs camera battery."
+        }
+      },
+      "classification": {
+        "title": "Classification",
+        "description": "A local camera-trap classifier server (for example SpeciesNet) is tried first. The AI Task entity is used when the local result is missing or not confident, and the stronger AI Task entity when the first AI answer is unsure. Put an empty photo of each scene in the camera's \"Reference photos\" folder to help the AI ignore rocks and logs.",
+        "data": {
+          "auto_classify": "Classify and sort new photos",
+          "classifier_url": "Local classifier server URL",
+          "classifier_token": "Local classifier token",
+          "country": "Country code",
+          "admin1_region": "Region / state code",
+          "min_score": "Minimum local confidence",
+          "ai_task_entity": "AI Task entity (fallback)",
+          "ai_task_entity_strong": "Stronger AI Task entity (second opinion)",
+          "ai_instructions": "Extra AI instructions",
+          "label_aliases": "Label aliases",
+          "ai_cost_per_call": "Cloud cost per AI call"
+        },
+        "data_description": {
+          "classifier_url": "Optional. A local camera-trap classifier (free, runs on your own computer) decides most photos; the AI Task only gets the unclear ones. Leave empty to use only the AI Task: simpler to set up, but every photo and video costs AI tokens. For example http://192.168.1.10:8765.",
+          "classifier_token": "Only if the server was started with a token.",
+          "country": "ISO code such as US. Improves species accuracy. Defaults to the Home Assistant country.",
+          "admin1_region": "Optional, such as CA for California.",
+          "min_score": "Local results below this go to the AI fallback, or to 'Needs review' without one.",
+          "ai_task_entity": "Must support image attachments. Usually a fast, inexpensive model.",
+          "ai_task_entity_strong": "Optional. Asked only when the first AI answer is unsure, so a more capable (and costlier) model is used sparingly.",
+          "ai_instructions": "Appended to the AI prompt, such as 'Ignore my brown dog'.",
+          "label_aliases": "Comma-separated name=folder pairs that rename species, such as eastern cottontail=rabbit.",
+          "ai_cost_per_call": "Used only to estimate cloud cost and the savings from local classification."
+        }
+      },
+      "notifications": {
+        "title": "Phone notifications",
+        "description": "Sightings are sent with their photo to the selected phones. Every classified photo also fires the tactacam_reveal_media_classified event for your own automations; its notify field follows these rules too.",
+        "data": {
+          "notify_devices": "Phones to notify",
+          "notify_cooldown_minutes": "Cooldown for repeat sightings",
+          "quiet_labels": "Never notify for",
+          "only_notify_labels": "Only notify for"
+        },
+        "data_description": {
+          "notify_cooldown_minutes": "After a notification, the same animal on the same camera stays quiet this long, so a burst of photos sends one alert. 0 turns it off.",
+          "quiet_labels": "Comma-separated labels, such as squirrel, vehicle.",
+          "only_notify_labels": "Optional comma-separated allow list, such as human, deer. Empty means everything not in the quiet list."
+        }
+      },
+      "cameras": {
+        "title": "Per-camera settings",
+        "description": "Every camera uses the global settings unless you customize it here. Tick one or more cameras, then choose settings for them; the same settings are applied to each ticked camera.\\n\\nCurrently customized: {customized}",
+        "data": {
+          "cameras": "Cameras to customize"
+        }
+      },
+      "camera_settings": {
+        "title": "Settings for {camera}",
+        "description": "Fields left empty use the global values. Saving replaces any earlier custom settings of these cameras.",
+        "data": {
+          "use_global": "Use the global settings (remove customization)",
+          "classify": "Classify and sort photos",
+          "notify": "Send notifications",
+          "only_notify_labels": "Only notify for",
+          "quiet_labels": "Never notify for",
+          "scene_notes": "Scene notes for the AI"
+        },
+        "data_description": {
+          "use_global": "Removes all custom settings below from the ticked cameras.",
+          "only_notify_labels": "Comma-separated allow list, such as turtle, human.",
+          "quiet_labels": "Comma-separated, replaces the global list for these cameras.",
+          "scene_notes": "Describe fixed objects that are not animals, for example 'the grey oval rock in the centre is not a turtle'. Overrides a scene.txt file in the camera's reference folder."
+        }
+      },
+      "video_requests": {
+        "title": "Automatic video requests",
+        "description": "Reveal handles one video request at a time, so requests wait in a queue and the next one is sent when the previous video arrived (or after an hour).",
+        "data": {
+          "video_request_labels": "Animals that trigger a video request"
+        },
+        "data_description": {
+          "video_request_labels": "Comma-separated labels as used for folders, for example: deer, turkey, coyote, turtle. **Leave blank to automatically request ALL videos**, including empty frames."
+        }
+      }
+    },
+    "error": {
+      "cannot_reach_classifier": "The classifier server did not answer at /health",
+      "ai_no_attachments": "This AI Task entity cannot analyze images",
+      "no_camera_selected": "Tick at least one camera"
+    }
+  },
+  "services": {
+    "sort_media": {
+      "name": "Sort media",
+      "description": "Move an archived Reveal photo, and its video, into a category subfolder within its camera folder.",
+      "fields": {
+        "media_content_id": {
+          "name": "Media content ID",
+          "description": "Media source ID of the archived photo."
+        },
+        "category": {
+          "name": "Category",
+          "description": "Subjects such as 'dog-human'. Labels are lowercased and sorted; empty means falsepositives."
+        }
+      }
+    },
+    "classify_media": {
+      "name": "Classify media",
+      "description": "Classify an archived Reveal photo with the configured local classifier and AI fallback, and optionally sort it.",
+      "fields": {
+        "media_content_id": {
+          "name": "Media content ID",
+          "description": "Media source ID of the archived photo."
+        },
+        "sort": {
+          "name": "Sort",
+          "description": "Move the photo into its category folder."
+        },
+        "fire_event": {
+          "name": "Fire event",
+          "description": "Fire tactacam_reveal_media_classified, which can trigger notifications."
+        }
+      }
+    },
+    "classify_archive": {
+      "name": "Classify archive",
+      "description": "Classify and sort archived photos in the background. Progress appears on the Photo processing sensor and a notification summarizes the result.",
+      "fields": {
+        "camera": {
+          "name": "Camera",
+          "description": "Only this camera, such as Back Field. Leave empty for all cameras."
+        },
+        "since": {
+          "name": "Since",
+          "description": "Only photos taken on or after this date."
+        },
+        "until": {
+          "name": "Until",
+          "description": "Only photos taken on or before this date."
+        },
+        "include_sorted": {
+          "name": "Include sorted photos",
+          "description": "Also re-classify photos already in a category folder."
+        }
+      }
+    },
+    "relabel": {
+      "name": "Relabel media",
+      "description": "Move an archived photo (and its video) to a different category folder, for example to correct a classification.",
+      "fields": {
+        "media_content_id": {
+          "name": "Media content ID",
+          "description": "Media source ID of the archived photo."
+        },
+        "category": {
+          "name": "Category",
+          "description": "Such as deer or dog-human. Empty means false positives."
+        }
+      }
+    },
+    "set_reference": {
+      "name": "Set as reference photo",
+      "description": "Use an archived empty photo as its camera's reference scene for the AI.",
+      "fields": {
+        "media_content_id": {
+          "name": "Media content ID",
+          "description": "Media source ID of an empty photo."
+        }
+      }
+    }
+  },
+  "issues": {
+    "classifier_offline": {
+      "title": "Tactacam classifier server is offline",
+      "description": "The local classifier at {url} has not answered for over 10 minutes. New photos fall back to the AI Task entity, or wait in Needs review."
+    },
+    "ai_fallback_failing": {
+      "title": "Tactacam AI fallback is failing",
+      "description": "The last AI classification failed: {error}. Check the AI provider's credit and the AI Task entity."
+    }
+  }
+}

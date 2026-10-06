@@ -1,0 +1,29 @@
+{
+  "domain": "tactacam_reveal",
+  "name": "Trailwatch",
+  "after_dependencies": [
+    "ai_task",
+    "diagnostics",
+    "media_source",
+    "mobile_app"
+  ],
+  "codeowners": [
+    "@corgicommander"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "ffmpeg",
+    "frontend",
+    "http",
+    "panel_custom",
+    "websocket_api"
+  ],
+  "documentation": "https://github.com/corgicommander/ha-trailwatch",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/corgicommander/ha-trailwatch/issues",
+  "requirements": [
+    "pycognito==2024.5.1"
+  ],
+  "version": "1.0.0"
+}
