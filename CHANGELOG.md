@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+- Photo page: Share/Save works in the Home Assistant app again (download fallback when
+  the app's web view has no Web Share API; 1.0.1 only showed "Sharing is not available").
+- Photo page: no extra gap above the title in the Companion app.
+
 ## 1.0.1
 
 - Ship the Trailwatch icon with the integration (`brand/`), shown by Home Assistant

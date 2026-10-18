@@ -337,11 +337,17 @@ class TactacamPhotoPanel extends HTMLElement {
       const file = await this._file();
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({ files: [file], title: text, text });
-      } else if (navigator.share) {
-        await navigator.share({ title: text, text });
-      } else {
-        this._flash("Sharing is not available in this browser");
+        return;
       }
+      // The Home Assistant app's web view has no Web Share API; a download
+      // opens the iPhone's own share/save sheet there, and saves elsewhere.
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(file);
+      link.download = file.name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 60000);
     } catch (err) {
       if (err.name !== "AbortError") this._flash(`Could not share: ${err.message || err}`);
     }
@@ -424,8 +430,9 @@ class TactacamPhotoPanel extends HTMLElement {
 const PANEL_STYLE = `<style>
   :host { display: block; min-height: 100vh; background: var(--primary-background-color);
     color: var(--primary-text-color); font-family: var(--paper-font-body1_-_font-family, inherit); }
+  /* The Companion app already keeps the page below the status bar. */
   .bar { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 8px;
-    padding-top: env(safe-area-inset-top); background: var(--app-header-background-color);
+    background: var(--app-header-background-color);
     color: var(--app-header-text-color, var(--text-primary-color)); }
   .bar .title { font-size: 20px; }
   .x { background: none; border: none; color: inherit; font-size: 22px; padding: 8px 12px; }
